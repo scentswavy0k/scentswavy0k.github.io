@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>test</title>
+    <style>
+        /* Минимум стилей: кнопки увеличены, но теперь примерно в 2 раза меньше */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* чтобы не выделялся текст при нажатиях */
+        }
+
+        body {
+            background: #eef2f7;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* общий контейнер — колонка с кнопками */
+        .page-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Небольшая заметка сверху (мелкий шрифт, но читаемый) */
+        .update-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #2c5a2e;
+            background: #e9f5e9;
+            padding: 6px 14px;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Список кнопок — обычная колонка */
+        .button-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;          /* промежуток между кнопками уменьшен под новый размер */
+            padding: 8px 0 30px 0;
+        }
+
+        /* КНОПКИ СТАЛИ МЕНЬШЕ — примерно в 2 раза от предыдущих (было 22px padding, 1.9rem шрифт) */
+        .proxy-btn {
+            display: block;
+            width: 100%;
+            background: #1e7e34;    /* приятный зелёный */
+            border: none;
+            border-radius: 50px;     /* округлые как большие, но аккуратные */
+            padding: 12px 20px;      /* было 22px — уменьшили примерно вдвое */
+            font-size: 1.1rem;       /* раньше 1.9rem — теперь почти в два раза меньше */
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 5px 0 #0a4b1f;  /* лёгкая тень, соответствует меньшей высоте */
+            font-family: inherit;
+            line-height: 1.3;
+            letter-spacing: 0.4px;
+        }
+
+        /* Эффект физического нажатия */
+        .proxy-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #0a4b1f;
+        }
+
+        /* НАЖАТАЯ КНОПКА (после клика) меняет цвет на заметный оранжево-красный */
+        .proxy-btn.clicked {
+            background: #d9534f;
+            box-shadow: 0 5px 0 #9c2e2b;
+        }
+
+        /* Лёгкое увеличение при наведении для удобства (но без искажения) */
+        @media (hover: hover) {
+            .proxy-btn:hover {
+                background: #2c8e42;
+                transform: scale(1.01);
+            }
+            .proxy-btn.clicked:hover {
+                background: #e06763;
+            }
+        }
+
+        /* сообщения о загрузке / ошибке */
+        .status-msg {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 25px 20px;
+            background: white;
+            border-radius: 60px;
+            color: #2c3e50;
+            font-weight: 500;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .no-proxies {
+            font-size: 1.1rem;
+            text-align: center;
+            background: #fff3cd;
+            padding: 22px;
+            border-radius: 50px;
+        }
+
+        /* мелкая подпись с количеством прокси */
+        .info-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #4a627a;
+            background: #f1f3f6;
+            padding: 6px 12px;
+            border-radius: 50px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* адаптация для очень маленьких экранов: кнопки остаются комфортными */
+        @media (max-width: 550px) {
+            .proxy-btn {
+                padding: 10px 16px;
+                font-size: 1rem;
+                border-radius: 40px;
+            }
+            .button-list {
+                gap: 10px;
+            }
+            .update-note {
+                font-size: 0.7rem;
+                margin-bottom: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page-container">
+    <!-- НЕБОЛЬШОЙ ТЕКСТ СВЕРХУ: Прокси обновляются каждые 12 часов -->
+    <div class="update-note">
+        🔄 Прокси обновляются каждые 12 часов
+    </div>
+
+    <!-- Контейнер для динамических кнопок -->
+    <div class="button-list" id="proxyContainer">
+        <div class="status-msg">⏳ Загрузка списка прокси...</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Прямая ссылка на raw-файл с прокси
+        const PROXIES_URL = 'https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt';
+        const container = document.getElementById('proxyContainer');
+
+        /**
+         * Создает кнопку с номером (индекс + 1) и привязывает клик.
+         * Цвет меняется при нажатии, открывается ссылка в новой вкладке.
+         * @param {string} proxyUrl - полная ссылка вида https://t.me/proxy?...
+         * @param {number} index - порядковый номер (0-based)
+         * @returns {HTMLButtonElement} готовая кнопка
+         */
+        function createButton(proxyUrl, index) {
+            const buttonNumber = index + 1;
+            const button = document.createElement('button');
+            button.className = 'proxy-btn';
+            
+            // Текст кнопки: номер + понятный значок и слово «Открыть»
+            // Чтобы пожилой человек сразу понимал: нажал — перейдёт по ссылке
+            button.textContent = `${buttonNumber}.  🔗  Открыть прокси`;
+            
+            // Храним URL в data-атрибуте
+            button.setAttribute('data-url', proxyUrl);
+            button.setAttribute('data-number', buttonNumber);
+            
+            // Обработчик клика
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                
+                // Открываем ссылку в новой вкладке (Telegram прокси)
+                window.open(proxyUrl, '_blank', 'noopener,noreferrer');
+                
+                // Если кнопка ещё не была нажата, меняем её внешний вид (перекрашиваем)
+                // и меняем текст на «Открыто» с галочкой — дополнительная понятность
+                if (!button.classList.contains('clicked')) {
+                    button.classList.add('clicked');
+                    // Меняем текст, чтобы было понятно: "уже нажата"
+                    // Сохраняем номер, добавляем галочку: "1.  ✓  Открыто"
+                    // (число остается, визуально ясно, что прокси уже активирован)
+                    button.textContent = `${buttonNumber}.  ✓  Открыто`;
+                    // Запоминаем оригинальный текст необязательно, но для порядка сохраним в атрибут
+                    button.setAttribute('data-original-label', `${buttonNumber}.  🔗  Открыть прокси`);
+                }
+                // Если кнопка уже нажата — цвет остаётся оранжевым, ссылка всё равно откроется повторно
+                // (Пожилой человек может повторно нажать — это безопасно, но цветовой сигнал уже говорит: использовано)
+            });
+            
+            return button;
+        }
+        
+        /**
+         * Отображает ошибку в дружелюбном виде
+         */
+        function showError(message) {
+            container.innerHTML = '';
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'status-msg';
+            errorDiv.style.background = '#f8d7da';
+            errorDiv.style.color = '#721c24';
+            errorDiv.style.border = '1px solid #f5c6cb';
+            errorDiv.innerHTML = `❌ ${message}<br><span style="font-size:0.9rem;">🔄 Попробуйте обновить страницу (F5) или проверьте интернет</span>`;
+            container.appendChild(errorDiv);
+        }
+        
+        /**
+         * Основная функция: загружает all_proxies.txt, парсит и создаёт кнопки
+         */
+        async function loadAndRenderProxies() {
+            try {
+                // Показываем состояние загрузки
+                container.innerHTML = '<div class="status-msg">⏳ Загрузка списка прокси...<br><span style="font-size:0.9rem;">Пожалуйста, подождите</span></div>';
+                
+                // Запрос к GitHub raw
+                const response = await fetch(PROXIES_URL);
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP ${response.status}: не удалось загрузить файл`);
+                }
+                
+                const rawText = await response.text();
+                // Разбиваем на строки
+                const lines = rawText.split(/\r?\n/);
+                
+                // Отбираем только корректные строки, начинающиеся с https://t.me/proxy?
+                const proxyLinks = [];
+                for (let line of lines) {
+                    line = line.trim();
+                    if (line.length === 0) continue;
+                    // Строгая проверка: начинается с протокола Telegram MTProto прокси
+                    if (line.startsWith('https://t.me/proxy?')) {
+                        proxyLinks.push(line);
+                    } else {
+                        // Любой мусор пропускаем (не включаем в кнопки)
+                        console.log('Пропущена строка (не прокси):', line.substring(0, 60));
+                    }
+                }
+                
+                // Если после фильтрации нет валидных прокси
+                if (proxyLinks.length === 0) {
+                    container.innerHTML = '';
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'no-proxies';
+                    emptyMsg.innerHTML = '⚠️ Список прокси пуст или не содержит корректных ссылок.<br>Проверьте источник позднее.';
+                    container.appendChild(emptyMsg);
+                    return;
+                }
+                
+                // Очищаем контейнер перед отрисовкой кнопок
+                container.innerHTML = '';
+                
+                // Создаём кнопки для каждой ссылки (по одной)
+                for (let idx = 0; idx < proxyLinks.length; idx++) {
+                    const link = proxyLinks[idx];
+                    const button = createButton(link, idx);
+                    container.appendChild(button);
+                }
+                
+                // Добавляем внизу небольшую информационную строку: сколько прокси загружено
+                const footerNote = document.createElement('div');
+                footerNote.className = 'info-footer';
+                footerNote.innerText = `✅ Активных прокси: ${proxyLinks.length} | Нажмите на кнопку → откроется Telegram`;
+                container.appendChild(footerNote);
+                
+            } catch (err) {
+                console.error('Ошибка при загрузке прокси:', err);
+                let userMessage = 'Не удалось загрузить список прокси.';
+                if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+                    userMessage = 'Нет соединения с интернетом или GitHub временно недоступен.';
+                } else if (err.message.includes('HTTP')) {
+                    userMessage = `Ошибка сервера: ${err.message}. Возможно, файл перемещён.`;
+                } else {
+                    userMessage = `Ошибка: ${err.message}`;
+                }
+                showError(userMessage + ' 🔌 Проверьте подключение и перезагрузите страницу.');
+            }
+        }
+        
+        // Запуск загрузки и генерации интерфейса
+        loadAndRenderProxies();
+    })();
+</script>
+</body>
+</html>
