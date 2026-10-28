@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой проект</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            color: #222;
+            padding: 20px;
+        }
+
+        .hero {
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0 0 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin: 0 0 40px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Контейнер для кнопок */
+        .menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Основная кнопка-ссылка */
+        .btn {
+            display: block;
+            padding: 18px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        /* Активная кнопка */
+        .btn-primary {
+            background: #24292e;
+            color: #fff;
+            border-color: #24292e;
+        }
+
+        .btn-primary:hover {
+            background: #3a4046;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Кнопки-заглушки */
+        .btn-disabled {
+            background: #fff;
+            color: #999;
+            border: 1px dashed #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .btn-disabled::after {
+            content: "скоро";
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #bbb;
+        }
+
+        /* На узких экранах — одна колонка */
+        @media (max-width: 500px) {
+            .menu {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>Мой проект</h1>
+        <p class="subtitle">
+            Здесь будут собраны интерактивные графики и аналитические материалы.
+        </p>
+
+        <div class="menu">
+
+            <!-- Активная кнопка -->
+            <a href="/linegraphs/" class="btn btn-primary">Смотреть графики</a>
+
+            <!-- Заглушки под будущую разработку -->
+            <span class="btn btn-disabled">Аналитика</span>
+            <span class="btn btn-disabled">О проекте</span>
+            <span class="btn btn-disabled">Контакты</span>
+            <span class="btn btn-disabled">Источники данных</span>
+
+        </div>
+    </div>
+
+</body>
+</html>
