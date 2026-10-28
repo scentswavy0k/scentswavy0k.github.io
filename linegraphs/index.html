@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Моя страница</title>
+    <title>Графики</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -17,7 +17,6 @@
             margin-bottom: 24px;
         }
 
-        /* Сетка 2×2 */
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -26,7 +25,6 @@
             margin: 0 auto;
         }
 
-        /* Каждая ячейка сетки */
         .chart-cell {
             min-width: 0;
             background: #fff;
@@ -36,7 +34,29 @@
             box-sizing: border-box;
         }
 
-        /* На узких экранах — одна колонка */
+        .chart-title {
+            display: block;
+            padding: 10px 12px 6px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #24292e;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 4px;
+            transition: color 0.15s ease;
+        }
+
+        .chart-title:hover {
+            color: #0969da;
+            text-decoration: underline;
+        }
+
+        .chart-title::after {
+            content: " ↗";
+            font-size: 0.85em;
+            color: #999;
+        }
+
         @media (max-width: 900px) {
             .charts-grid {
                 grid-template-columns: 1fr;
@@ -52,22 +72,30 @@
 
         <!-- ЛитРес — слева сверху -->
         <div class="chart-cell">
-            <iframe title="ЛитРес" aria-label="Line chart" id="datawrapper-chart-AjllV" src="https://datawrapper.dwcdn.net/AjllV" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="455" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+            <a class="chart-title" href="https://www.litres.ru/book/73795536" target="_blank" rel="noopener noreferrer">ЛитРес</a>
+            <!-- Добавлен параметр ?plain=true -->
+            <iframe title="ЛитРес" aria-label="Line chart" id="datawrapper-chart-AjllV" src="https://datawrapper.dwcdn.net/AjllV?plain=true" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="455" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
         </div>
 
         <!-- LiveLib — справа сверху -->
         <div class="chart-cell">
-            <iframe title="LiveLib" aria-label="Line chart" id="datawrapper-chart-4FP5p" src="https://datawrapper.dwcdn.net/4FP5p" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="441" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+            <a class="chart-title" href="https://www.livelib.ru/book/1018080655" target="_blank" rel="noopener noreferrer">LiveLib</a>
+            <!-- Добавлен параметр ?plain=true -->
+            <iframe title="LiveLib" aria-label="Line chart" id="datawrapper-chart-4FP5p" src="https://datawrapper.dwcdn.net/4FP5p?plain=true" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="441" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
         </div>
 
         <!-- BookMix — слева снизу -->
         <div class="chart-cell">
-            <iframe title="BookMix" aria-label="Line chart" id="datawrapper-chart-iyDgt" src="https://datawrapper.dwcdn.net/iyDgt" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="453" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+            <a class="chart-title" href="https://bookmix.ru/book.phtml?id=4524133" target="_blank" rel="noopener noreferrer">BookMix</a>
+            <!-- Добавлен параметр ?plain=true -->
+            <iframe title="BookMix" aria-label="Line chart" id="datawrapper-chart-iyDgt" src="https://datawrapper.dwcdn.net/iyDgt?plain=true" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="453" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
         </div>
 
         <!-- MyBook — справа снизу -->
         <div class="chart-cell">
-            <iframe title="MyBook" aria-label="Line chart" id="datawrapper-chart-EgHYE" src="https://datawrapper.dwcdn.net/EgHYE" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="442" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+            <a class="chart-title" href="https://mybook.ru/author/edvard-monk/sneg-46/" target="_blank" rel="noopener noreferrer">MyBook</a>
+            <!-- Добавлен параметр ?plain=true -->
+            <iframe title="MyBook" aria-label="Line chart" id="datawrapper-chart-EgHYE" src="https://datawrapper.dwcdn.net/EgHYE?plain=true" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="442" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
         </div>
 
     </div>
